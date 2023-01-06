@@ -13,13 +13,14 @@ import org.springframework.util.ObjectUtils;
 import com.huihui.memo.MemoApplication;
 import com.huihui.memo.dao.UserDao;
 import com.huihui.memo.pojo.User;
+import com.huihui.memo.view.LoginView;
+import com.huihui.memo.view.RegisterView;
 
 import de.felixroske.jfxsupport.FXMLController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -29,8 +30,13 @@ import javafx.stage.Stage;
 public class RegisterController implements Initializable{
 
 	private Stage primaryStage;
+	//按钮
 	@FXML
 	public Button registerButton;
+	@FXML
+	public Button loginButton;
+	
+	//文本框
 	@FXML
 	public TextField nameField;
 	@FXML
@@ -88,5 +94,10 @@ public class RegisterController implements Initializable{
 		Alert alert = new Alert(Alert.AlertType.INFORMATION,"注册成功!");
         alert.initOwner(primaryStage);
         alert.showAndWait();	
+	}
+	
+	@FXML
+	public void login(ActionEvent event)throws IOException {
+		MemoApplication.showView(LoginView.class);
 	}
 }
