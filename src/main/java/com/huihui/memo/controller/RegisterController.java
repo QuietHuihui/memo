@@ -80,9 +80,29 @@ public class RegisterController implements Initializable{
 	         alert.showAndWait();			
 			throw new RuntimeException("当前邮箱已被注册！");
 		}
-
+		
+		if(username.equals("")) {
+			Alert alert = new Alert(Alert.AlertType.WARNING,"用户名不能为空。");
+	        alert.initOwner(primaryStage);
+	        alert.showAndWait();			
+			throw new RuntimeException("用户名不能为空！");
+		}
+		
+		if(email.equals("")) {
+			Alert alert = new Alert(Alert.AlertType.WARNING,"邮箱不能为空。");
+	         alert.initOwner(primaryStage);
+	         alert.showAndWait();			
+			throw new RuntimeException("邮箱不能为空！");
+		}
+		
 		//用户名和邮箱都未被使用，把新用户的信息保存到数据库
 		String password = pwdField.getText();
+		if(password.equals("")) {
+			Alert alert = new Alert(Alert.AlertType.WARNING,"密码不能为空。");
+	         alert.initOwner(primaryStage);
+	         alert.showAndWait();			
+			throw new RuntimeException("密码不能为空！");
+		}
 		//给明文的密码加密，相同字符串多次使用md5加密，加密的结果始终是相同的
 		String codedPassword = DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8));
 		User user = new User();
@@ -99,5 +119,6 @@ public class RegisterController implements Initializable{
 	@FXML
 	public void login(ActionEvent event)throws IOException {
 		MemoApplication.showView(LoginView.class);
+		MemoApplication.getStage().sizeToScene();
 	}
 }
