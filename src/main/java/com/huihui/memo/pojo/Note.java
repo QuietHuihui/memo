@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -17,6 +18,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@NamedQuery(name="Note.findByUserId",query="select n from Note n where n.user.id=:uid")
 
 @Entity
 @DynamicUpdate
@@ -35,18 +37,27 @@ public class Note {
 	@Column(name="content")
 	private String content;
 	
+	@Column(name="status")
+	private String status;
+	
 	@Column(name="createdDate")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date createdDate;
+	
+	@Column(name="finishedDate")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date finishedDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_fk",nullable=false)
 	User user;
 
-	public Note(Integer id, String title, String content, Date createdDate, User user) {
+	public Note(Integer id, String title, String content, String status, Date createdDate, User user) {
+		super();
 		this.id = id;
 		this.title = title;
 		this.content = content;
+		this.status = status;
 		this.createdDate = createdDate;
 		this.user = user;
 	}
@@ -92,6 +103,15 @@ public class Note {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	@Override

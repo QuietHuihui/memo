@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="com.huihui.memo.controller.MemoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.huihui.memo.controller.MemoController">
    <children>
       <SplitPane dividerPositions="0.3194813829787233" prefHeight="640.0" prefWidth="603.0">
         <items>
@@ -41,11 +40,12 @@ fx:controller="com.huihui.memo.controller.MemoController">
                <children>
                   <ScrollPane layoutX="7.0" layoutY="86.0" prefHeight="446.0" prefWidth="390.0">
                      <content>
-                        <TableView prefHeight="446.0" prefWidth="380.0">
+                        <TableView fx:id="noteView" prefHeight="446.0" prefWidth="380.0">
                           <columns>
-                            <TableColumn fx:id="numCol" prefWidth="47.200012028217316" text="序号" />
-                            <TableColumn fx:id="titleCol" prefWidth="266.4000053405762" text="标题" />
-                              <TableColumn fx:id="operationCol" prefWidth="63.199951171875" text="操作" />
+                            <TableColumn fx:id="titleCol" prefWidth="238.40002137422562" text="标题" />
+                              <TableColumn fx:id="detailCol" prefWidth="45.0" text="详情" />
+                              <TableColumn fx:id="editCol" prefWidth="45.0" text="编辑" />
+                              <TableColumn fx:id="deleteCol" prefWidth="45.0" text="删除" />
                           </columns>
                         </TableView>
                      </content></ScrollPane>

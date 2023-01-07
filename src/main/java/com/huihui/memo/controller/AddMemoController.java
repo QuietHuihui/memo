@@ -77,6 +77,9 @@ public class AddMemoController {
     	
 	    note.setCreatedDate(createdDate);
 	    
+	    //设置备忘状态
+	    note.setStatus("unfinished");
+	    
 	    //获取当前用户，设置此条备忘的主人
     	List<CurrentUser> currentUser = currentUserDao.findAll();
     	User user = currentUser.get(0).getUser();
