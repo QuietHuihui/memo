@@ -2,6 +2,8 @@ package com.huihui.memo.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -198,13 +200,25 @@ public class MemoController implements Initializable{
 									dialog.setDialogPane(editPane);
 									dialog.setTitle("详细信息");
 									dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+									
+									//设置一个不可见的关闭Dialog按钮，使得单击Dialog右上角的"X"能够关闭Dialog窗口
 						            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
 						            closeButton.managedProperty().bind(closeButton.visibleProperty());
 						            closeButton.setVisible(false);
-									dialog.show();
+									dialog.showAndWait();
+									
+									//把临时文件中的修改内容读取进来，并且进行分词。
+									String modifyString = new String(Files.readAllBytes(Paths.get("temp.txt")));
+									String modifyItems[] = modifyString.split("█");
+									
+									//更新当前备忘的信息
+									note.setTitle(modifyItems[0]);
+									note.setContent(modifyItems[1]);
+									note.setStatus(modifyItems[2]);
+									
+									noteDao.save(note);
 									
 								} catch (IOException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
     					        

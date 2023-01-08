@@ -1,5 +1,8 @@
 package com.huihui.memo.controller;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.huihui.memo.dao.NoteDao;
@@ -38,14 +41,20 @@ public class EditMemoController{
     
 
     @FXML
-    void EditSubmit(ActionEvent event) {
+    void EditSubmit(ActionEvent event) throws IOException {
     	String title=txtEditTitle.getText();
     	String content = txtEditContent.getText();
     	String status = choiceBoxStatus.getSelectionModel().getSelectedItem();
+    	
+    	
     	note.setTitle(title);
     	note.setContent(content);
     	note.setStatus(status);
-    	noteDao.save(note);
+    	
+    	//把编辑内容输出到临时文件中
+    	FileWriter fw = new FileWriter("temp.txt");
+    	fw.write(title+"█"+content+"█"+status);
+    	fw.close();
     }
     
     void setNote(Note note) {
