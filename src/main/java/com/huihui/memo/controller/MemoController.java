@@ -1,6 +1,7 @@
 package com.huihui.memo.controller;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -214,9 +217,29 @@ public class MemoController implements Initializable{
     					}
     					else{
     						btnEdit.setOnAction(e ->{
-//    							User user = getTableView().getItems().get(getIndex());
-//    							updateUser(user);
-    							System.out.println("btnEdit triggered!");
+    							
+    							//获取本行对应的备忘
+    							Note note = getTableView().getItems().get(getIndex());
+    							String title = note.getTitle();
+    							
+    							//弹出警告，询问是否要删除
+    				            Alert alertComfirm = new Alert(Alert.AlertType.CONFIRMATION);
+    				            alertComfirm.setTitle(title);
+    				            alertComfirm.setContentText("确认要删除备忘“"+title+"”吗？");
+    				            
+    				            Optional<ButtonType>result = alertComfirm.showAndWait();
+
+    							if(result.get()==ButtonType.OK) {
+        							noteDao.delete(note);
+        							Alert alert = new Alert(Alert.AlertType.INFORMATION,"备忘“"+title+"”已删除。");
+        					        alert.initOwner(MemoApplication.getStage());
+        					        alert.showAndWait();
+        					        
+        					        //删除后刷新列表
+        							noteView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        							loadNoteDetails();
+        							setColumnProperties();
+    							}
     						});
     						
     						btnEdit.setStyle("-fx-background-color: transparent;");
@@ -233,15 +256,6 @@ public class MemoController implements Initializable{
     					}
     				}
 
-//    				private void updateUser(User user) {
-//    					userId.setText(Long.toString(user.getId()));
-//    					firstName.setText(user.getFirstName());
-//    					lastName.setText(user.getLastName());
-//    					dob.setValue(user.getDob());
-//    					if(user.getGender().equals("Male")) rbMale.setSelected(true);
-//    					else rbFemale.setSelected(true);
-//    					cbRole.getSelectionModel().select(user.getRole());
-//    				}
     			};
     			return cell;
     		}
