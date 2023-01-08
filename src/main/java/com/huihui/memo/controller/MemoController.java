@@ -221,6 +221,7 @@ public class MemoController implements Initializable{
 										//把临时文件中的修改内容读取进来，并且进行分词。
 										String modifyString = new String(Files.readAllBytes(Paths.get("temp.txt")));
 										String modifyItems[] = modifyString.split("█");
+										//删除临时文件
 										Files.delete(Paths.get("temp.txt"));
 										
 										//更新当前备忘的信息
@@ -231,6 +232,11 @@ public class MemoController implements Initializable{
 										noteDao.save(note);
 										
 										dialog.close();
+										
+										//更新后刷新列表
+	        							noteView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+	        							loadNoteDetails();
+	        							setColumnProperties();
 									}
 									
 
@@ -295,6 +301,7 @@ public class MemoController implements Initializable{
     				            
     				            Optional<ButtonType>result = alertComfirm.showAndWait();
 
+    				            //确认删除，成功则弹出提示
     							if(result.get()==ButtonType.OK) {
         							noteDao.delete(note);
         							Alert alert = new Alert(Alert.AlertType.INFORMATION,"备忘“"+title+"”已删除。");
