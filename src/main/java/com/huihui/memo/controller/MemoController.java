@@ -1,4 +1,6 @@
 package com.huihui.memo.controller;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -13,17 +15,22 @@ import com.huihui.memo.pojo.CurrentUser;
 import com.huihui.memo.pojo.Note;
 import com.huihui.memo.pojo.User;
 import com.huihui.memo.view.AddMemoView;
+import com.huihui.memo.view.LoginView;
 
 import de.felixroske.jfxsupport.FXMLController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -33,6 +40,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 @FXMLController
@@ -84,6 +94,10 @@ public class MemoController implements Initializable{
     //用于存储视图中的每个项
     private ObservableList<Note>noteList = FXCollections.observableArrayList();
     
+    Parent root;
+    
+    Stage primaryStage;
+    
     //其他
     @Autowired
     NoteDao noteDao;
@@ -91,6 +105,8 @@ public class MemoController implements Initializable{
     @Autowired
     CurrentUserDao currentUserDao;
     
+    User curUser = new User();
+     
     @FXML
     void AddMemo(ActionEvent event) {
     	MemoApplication.showView(AddMemoView.class);
@@ -99,12 +115,21 @@ public class MemoController implements Initializable{
 
     @FXML
     void Logout(ActionEvent event) {
-
+		//删除之前的用户
+		currentUserDao.deleteAll();
+        MemoApplication.showView(LoginView.class);
+        MemoApplication.getStage().sizeToScene();
     }
 
     @FXML
     void Search(ActionEvent event) {
-
+    	String search = txtSearch.getText();
+    	Integer uid = curUser.getId();
+    	List<Note>searchNotes = noteDao.findBySearch(search,uid);
+    	noteList.clear();
+    	noteList.addAll(searchNotes);
+    	noteView.setItems(noteList);
+    	setColumnProperties();
     }
 
     @FXML
@@ -124,12 +149,9 @@ public class MemoController implements Initializable{
 
     private void loadNoteDetails() {
     	noteList.clear();
-	    //获取当前用户
-    	List<CurrentUser> currentUser = currentUserDao.findAll();
-    	User user = currentUser.get(0).getUser();
-    	Integer uid = user.getId();
-    	String username = user.getUsername(); 
-    	
+
+    	String username = curUser.getUsername(); 
+    	Integer uid = curUser.getId();
     	//设置欢迎词
     	labelWelcome.setText("欢迎， "+username+" 。");
     	
@@ -140,6 +162,7 @@ public class MemoController implements Initializable{
 
     private void setColumnProperties() {
     	
+    	//编辑或者查看备忘详情
     	Callback<TableColumn<Note, Boolean>, TableCell<Note, Boolean>> detailCell = 
     			new Callback<TableColumn<Note, Boolean>, TableCell<Note, Boolean>>()
     	{
@@ -162,9 +185,29 @@ public class MemoController implements Initializable{
     					}
     					else{
     						btnEdit.setOnAction(e ->{
-//    							User user = getTableView().getItems().get(getIndex());
-//    							updateUser(user);
-    							System.out.println("btnEdit triggered!");
+    							Note note = getTableView().getItems().get(getIndex());
+
+    					        try {
+        					        FXMLLoader loader = new FXMLLoader();
+        					        loader.setLocation(getClass().getResource("editdialog.fxml"));
+									DialogPane editPane = loader.load();
+									EditMemoController editMemoController = loader.getController();
+									editMemoController.setNote(note);
+									Dialog<ButtonType>dialog = new Dialog<>();
+									dialog.setDialogPane(editPane);
+									dialog.setTitle("详细信息");
+									
+									Optional<ButtonType>clickedButton=dialog.showAndWait();
+									if(clickedButton.get()==ButtonType.OK) {
+										System.out.println("Note selected ok.");
+									}
+									
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+    					        
+
     						});
     						
     						btnEdit.setStyle("-fx-background-color: transparent;");
@@ -274,8 +317,24 @@ public class MemoController implements Initializable{
 		setColumnProperties();
     }
     
+    //编辑备忘使用
+    
+    @FXML
+    void editBack(ActionEvent event) {
+
+    }
+
+    @FXML
+    void editSubmit(ActionEvent event) {
+
+    }
+    
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+	    //获取当前用户
+    	List<CurrentUser> currentUser = currentUserDao.findAll();
+    	curUser = currentUser.get(0).getUser();
 		
 		noteView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		
