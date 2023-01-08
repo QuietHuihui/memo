@@ -20,6 +20,7 @@ import com.huihui.memo.view.AddMemoView;
 import com.huihui.memo.view.LoginView;
 
 import de.felixroske.jfxsupport.FXMLController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -122,6 +123,9 @@ public class MemoController implements Initializable{
 		currentUserDao.deleteAll();
         MemoApplication.showView(LoginView.class);
         MemoApplication.getStage().sizeToScene();
+        
+        //关闭应用
+        Platform.exit();
     }
 
     @FXML
@@ -195,28 +199,41 @@ public class MemoController implements Initializable{
         					        loader.setLocation(getClass().getResource("editdialog.fxml"));
 									DialogPane editPane = loader.load();
 									EditMemoController editMemoController = loader.getController();
-									editMemoController.setNote(note);
+									
+									/*把这行所对应的备忘和dialogPane一同传给EditMemoController，不能直接在controller中
+									用@FXML dialogPane, 否则会出现null exception*/ 
+									
 									Dialog<ButtonType>dialog = new Dialog<>();
 									dialog.setDialogPane(editPane);
 									dialog.setTitle("详细信息");
 									dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+									dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+									editMemoController.setNote(note,editPane);
 									
 									//设置一个不可见的关闭Dialog按钮，使得单击Dialog右上角的"X"能够关闭Dialog窗口
 						            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
 						            closeButton.managedProperty().bind(closeButton.visibleProperty());
 						            closeButton.setVisible(false);
-									dialog.showAndWait();
+										
+									Optional<ButtonType>clickedButton = dialog.showAndWait();
 									
-									//把临时文件中的修改内容读取进来，并且进行分词。
-									String modifyString = new String(Files.readAllBytes(Paths.get("temp.txt")));
-									String modifyItems[] = modifyString.split("█");
+									if(clickedButton.get().equals(ButtonType.OK)) {
+										//把临时文件中的修改内容读取进来，并且进行分词。
+										String modifyString = new String(Files.readAllBytes(Paths.get("temp.txt")));
+										String modifyItems[] = modifyString.split("█");
+										Files.delete(Paths.get("temp.txt"));
+										
+										//更新当前备忘的信息
+										note.setTitle(modifyItems[0]);
+										note.setContent(modifyItems[1]);
+										note.setStatus(modifyItems[2]);
+										
+										noteDao.save(note);
+										
+										dialog.close();
+									}
 									
-									//更新当前备忘的信息
-									note.setTitle(modifyItems[0]);
-									note.setContent(modifyItems[1]);
-									note.setStatus(modifyItems[2]);
-									
-									noteDao.save(note);
+
 									
 								} catch (IOException e1) {
 									e1.printStackTrace();
@@ -239,15 +256,6 @@ public class MemoController implements Initializable{
     					}
     				}
 
-//    				private void updateUser(User user) {
-//    					userId.setText(Long.toString(user.getId()));
-//    					firstName.setText(user.getFirstName());
-//    					lastName.setText(user.getLastName());
-//    					dob.setValue(user.getDob());
-//    					if(user.getGender().equals("Male")) rbMale.setSelected(true);
-//    					else rbFemale.setSelected(true);
-//    					cbRole.getSelectionModel().select(user.getRole());
-//    				}
     			};
     			return cell;
     		}

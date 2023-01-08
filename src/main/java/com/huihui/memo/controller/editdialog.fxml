@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane prefHeight="450.0" prefWidth="523.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.huihui.memo.controller.EditMemoController">
+<DialogPane fx:id="dialogPane" prefHeight="450.0" prefWidth="523.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.huihui.memo.controller.EditMemoController">
    <content>
       <Pane prefHeight="448.0" prefWidth="523.0">
          <children>
