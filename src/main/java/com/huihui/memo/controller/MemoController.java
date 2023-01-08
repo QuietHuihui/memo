@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -196,11 +197,11 @@ public class MemoController implements Initializable{
 									Dialog<ButtonType>dialog = new Dialog<>();
 									dialog.setDialogPane(editPane);
 									dialog.setTitle("详细信息");
-									
-									Optional<ButtonType>clickedButton=dialog.showAndWait();
-									if(clickedButton.get()==ButtonType.OK) {
-										System.out.println("Note selected ok.");
-									}
+									dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+						            Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
+						            closeButton.managedProperty().bind(closeButton.visibleProperty());
+						            closeButton.setVisible(false);
+									dialog.show();
 									
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block

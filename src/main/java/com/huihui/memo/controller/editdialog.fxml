@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane fx:id="dialogPane" prefHeight="449.0" prefWidth="523.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.huihui.memo.controller.EditMemoController">
+<DialogPane prefHeight="450.0" prefWidth="523.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.huihui.memo.controller.EditMemoController">
    <content>
       <Pane prefHeight="448.0" prefWidth="523.0">
          <children>
@@ -36,12 +36,7 @@
                   <Font size="17.0" />
                </font>
             </Label>
-            <Button fx:id="btnEditSubmit" layoutX="159.0" layoutY="405.0" mnemonicParsing="false" onAction="#EditSubmit" text="提交">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnEditBack" layoutX="309.0" layoutY="405.0" mnemonicParsing="false" onAction="#EditBack" text="返回">
+            <Button fx:id="btnEditSubmit" layoutX="234.0" layoutY="395.0" mnemonicParsing="false" onAction="#EditSubmit" text="提交">
                <font>
                   <Font size="15.0" />
                </font>

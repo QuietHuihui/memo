@@ -1,5 +1,8 @@
 package com.huihui.memo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.huihui.memo.dao.NoteDao;
 import com.huihui.memo.pojo.Note;
 
 import javafx.collections.FXCollections;
@@ -7,20 +10,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class EditMemoController{
 
-    @FXML
-    private DialogPane dialogPane;
+    @Autowired
+    NoteDao noteDao;
 	
-    @FXML
-    private Button btnEditBack;
-
     @FXML
     private Button btnEditSubmit;
 
@@ -37,15 +35,17 @@ public class EditMemoController{
     private ObservableList<String> statusList = FXCollections.observableArrayList();
     
     Note note;
-
-    @FXML
-    void EditBack(ActionEvent event) {
-
-    }
+    
 
     @FXML
     void EditSubmit(ActionEvent event) {
-
+    	String title=txtEditTitle.getText();
+    	String content = txtEditContent.getText();
+    	String status = choiceBoxStatus.getSelectionModel().getSelectedItem();
+    	note.setTitle(title);
+    	note.setContent(content);
+    	note.setStatus(status);
+    	noteDao.save(note);
     }
     
     void setNote(Note note) {
@@ -56,8 +56,7 @@ public class EditMemoController{
 		statusList.add("未完成");
 		statusList.add("已完成");	
 		choiceBoxStatus.setItems(statusList);
-		
-		//Button button = (Button)dialogPane.lookupButton(ButtonType.OK);
+		choiceBoxStatus.setValue(note.getStatus());
     }
     
     public EditMemoController() {
