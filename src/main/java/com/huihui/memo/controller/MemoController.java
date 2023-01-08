@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -49,6 +50,9 @@ public class MemoController implements Initializable{
 
     @FXML
     private Button btnSearch;
+    
+    @FXML
+    private Button btnRefresh;
 
     @FXML
     private Button btnUnfinishedMemo;
@@ -60,16 +64,19 @@ public class MemoController implements Initializable{
     private TableColumn<Note, Boolean> detailCol;
     
     @FXML
-    private TableColumn<Note, Boolean> editCol;
-    
-    @FXML
     private TableColumn<Note, Boolean> deleteCol;
 
     @FXML
     private TableColumn<Note, String> titleCol;
+    
+    @FXML
+    private TableColumn<Note, String> statusCol;
 
     @FXML
     private TextField txtSearch;
+    
+    @FXML
+    private Label labelWelcome;
 
     //用于存储视图中的每个项
     private ObservableList<Note>noteList = FXCollections.observableArrayList();
@@ -118,67 +125,17 @@ public class MemoController implements Initializable{
     	List<CurrentUser> currentUser = currentUserDao.findAll();
     	User user = currentUser.get(0).getUser();
     	Integer uid = user.getId();
+    	String username = user.getUsername(); 
+    	
+    	//设置欢迎词
+    	labelWelcome.setText("欢迎， "+username+" 。");
+    	
     	List<Note>notes=noteDao.findByUserId(uid);
     	noteList.addAll(notes);
     	noteView.setItems(noteList);
     }
 
     private void setColumnProperties() {
-    	
-    	Callback<TableColumn<Note, Boolean>, TableCell<Note, Boolean>> editCell = 
-    			new Callback<TableColumn<Note, Boolean>, TableCell<Note, Boolean>>()
-    	{
-    		@Override
-    		public TableCell<Note, Boolean> call( final TableColumn<Note, Boolean> param)
-    		{
-    			final TableCell<Note, Boolean> cell = new TableCell<Note, Boolean>()
-    			{
-    				Image imgEdit = new Image(getClass().getResourceAsStream("/images/edit.png"));
-    				final Button btnEdit = new Button();
-    				
-    				@Override
-    				public void updateItem(Boolean check, boolean empty)
-    				{
-    					super.updateItem(check, empty);
-    					if(empty)
-    					{
-    						setGraphic(null);
-    						setText(null);
-    					}
-    					else{
-    						btnEdit.setOnAction(e ->{
-//    							User user = getTableView().getItems().get(getIndex());
-//    							updateUser(user);
-    							System.out.println("btnEdit triggered!");
-    						});
-    						
-    						btnEdit.setStyle("-fx-background-color: transparent;");
-    						ImageView iv = new ImageView();
-    				        iv.setImage(imgEdit);
-    				        iv.setPreserveRatio(true);
-    				        iv.setSmooth(true);
-    				        iv.setCache(true);
-    						btnEdit.setGraphic(iv);
-    						
-    						setGraphic(btnEdit);
-    						setAlignment(Pos.CENTER);
-    						setText(null);
-    					}
-    				}
-
-//    				private void updateUser(User user) {
-//    					userId.setText(Long.toString(user.getId()));
-//    					firstName.setText(user.getFirstName());
-//    					lastName.setText(user.getLastName());
-//    					dob.setValue(user.getDob());
-//    					if(user.getGender().equals("Male")) rbMale.setSelected(true);
-//    					else rbFemale.setSelected(true);
-//    					cbRole.getSelectionModel().select(user.getRole());
-//    				}
-    			};
-    			return cell;
-    		}
-    	};
     	
     	Callback<TableColumn<Note, Boolean>, TableCell<Note, Boolean>> detailCell = 
     			new Callback<TableColumn<Note, Boolean>, TableCell<Note, Boolean>>()
@@ -188,7 +145,7 @@ public class MemoController implements Initializable{
     		{
     			final TableCell<Note, Boolean> cell = new TableCell<Note, Boolean>()
     			{
-    				Image imgEdit = new Image(getClass().getResourceAsStream("/images/edit.png"));
+    				Image imgEdit = new Image(getClass().getResourceAsStream("/images/detail.png"));
     				final Button btnEdit = new Button();
     				
     				@Override
@@ -243,7 +200,7 @@ public class MemoController implements Initializable{
     		{
     			final TableCell<Note, Boolean> cell = new TableCell<Note, Boolean>()
     			{
-    				Image imgEdit = new Image(getClass().getResourceAsStream("/images/edit.png"));
+    				Image imgEdit = new Image(getClass().getResourceAsStream("/images/delete.png"));
     				final Button btnEdit = new Button();
     				
     				@Override
@@ -291,15 +248,21 @@ public class MemoController implements Initializable{
     	};
     	
     	titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-    	editCol.setCellFactory(editCell);
+    	statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
     	detailCol.setCellFactory(detailCell);
     	deleteCol.setCellFactory(deleteCell);
-    	
-
+    }
+    
+    @FXML
+    void Refresh(ActionEvent event) {
+		noteView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		loadNoteDetails();
+		setColumnProperties();
     }
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
 		noteView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		
 		loadNoteDetails();
