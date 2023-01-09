@@ -186,17 +186,28 @@ public class MemoController implements Initializable{
     
     @FXML
     void getAllMemo(ActionEvent event) {
-
+        //获取所有备忘
+		noteView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		loadNoteDetails();
+		setColumnProperties();
     }
 
     @FXML
     void getFinishedMemo(ActionEvent event) {
-
+    	List<Note>finishedNotes = noteDao.findFinished();
+    	noteList.clear();
+    	noteList.addAll(finishedNotes);
+    	noteView.setItems(noteList);
+    	setColumnProperties();
     }
 
     @FXML
     void getUnfinishedMemo(ActionEvent event) {
-
+    	List<Note>unfinishedNotes = noteDao.findUnFinished();
+    	noteList.clear();
+    	noteList.addAll(unfinishedNotes);
+    	noteView.setItems(noteList);
+    	setColumnProperties();
     }
 
     private void loadNoteDetails() {

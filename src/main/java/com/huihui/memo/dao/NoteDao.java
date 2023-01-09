@@ -28,4 +28,10 @@ public interface NoteDao extends JpaRepository<Note, Integer>{
 	@Query(value = "UPDATE Note n SET n.content = replace(n.content, :search , :replaceString), n.title = replace(n.title, :search , :replaceString) WHERE n.content LIKE CONCAT('%',:search,'%') or n.title LIKE CONCAT('%',:search,'%') and n.user.id=:uid")
 	void replace(@Param("search") String search,@Param("replaceString") String replaceString,@Param("uid") Integer uid);
 
+	@Query(value = "select * from Note where status = '已完成' ",nativeQuery = true)
+	List<Note> findFinished();
+	
+	@Query(value = "select * from Note where status = '未完成' ",nativeQuery = true)
+	List<Note> findUnFinished();
+
 }
