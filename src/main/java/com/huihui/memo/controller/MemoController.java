@@ -69,6 +69,9 @@ public class MemoController implements Initializable{
     private Button btnSearch;
     
     @FXML
+    private Button btnReplace;
+    
+    @FXML
     private Button btnRefresh;
 
     @FXML
@@ -91,6 +94,9 @@ public class MemoController implements Initializable{
 
     @FXML
     private TextField txtSearch;
+    
+    @FXML
+    private TextField txtReplace;
     
     @FXML
     private Label labelWelcome;
@@ -139,6 +145,36 @@ public class MemoController implements Initializable{
     	setColumnProperties();
     }
 
+    @FXML
+    void Replace(ActionEvent event) {
+    	String search = txtSearch.getText();
+    	String replace = txtReplace.getText();
+    	Integer uid = curUser.getId();
+    	List<Note>searchNotes = noteDao.findBySearch(search,uid);
+    	Integer numOfNotes = searchNotes.size();
+    	
+		//弹出警告，询问是否要替换
+        Alert alertComfirm = new Alert(Alert.AlertType.CONFIRMATION);
+        alertComfirm.setTitle("警告");
+        alertComfirm.setContentText("找到符合条件的备忘共 "+numOfNotes+" 条，确认进行替换吗？" );
+        
+        Optional<ButtonType>result = alertComfirm.showAndWait();
+
+        //确认替换，成功则弹出提示
+		if(result.get()==ButtonType.OK) {
+			noteDao.replace(search,replace,uid);
+			
+			Alert alert = new Alert(Alert.AlertType.INFORMATION,"替换成功。");
+	        alert.initOwner(MemoApplication.getStage());
+	        alert.showAndWait();
+	        
+	        //替换后刷新列表
+			noteView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+			loadNoteDetails();
+			setColumnProperties();
+		}
+    }
+    
     @FXML
     void getAllMemo(ActionEvent event) {
 

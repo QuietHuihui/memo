@@ -3,6 +3,7 @@ package com.huihui.memo.controller;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,6 +21,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -49,9 +52,22 @@ public class AddMemoController {
 
     @FXML
     void back(ActionEvent event) {
-		MemoApplication.showView(MemoView.class);
-		//调整为适当大小
-		MemoApplication.getStage().sizeToScene();
+    	
+		//弹出警告，询问是否要关闭
+        Alert alertComfirm = new Alert(Alert.AlertType.CONFIRMATION);
+        alertComfirm.setTitle("警告");
+        alertComfirm.setContentText("确认要退出吗？您的备忘未创建。");
+        
+        Optional<ButtonType>result = alertComfirm.showAndWait();
+
+        //确认退出
+		if(result.get()==ButtonType.OK) {
+			
+			//因为是直接切换视图，所以内容仍然在编辑框当中。
+			MemoApplication.showView(MemoView.class);
+			//调整为适当大小
+			MemoApplication.getStage().sizeToScene();
+		}
     }
 
     @FXML
