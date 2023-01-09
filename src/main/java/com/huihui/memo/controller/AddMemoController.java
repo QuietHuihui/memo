@@ -1,5 +1,7 @@
 package com.huihui.memo.controller;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -22,7 +24,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -40,78 +42,36 @@ public class AddMemoController {
 
     @FXML
     private TextField txtTitle;
-    
-    @Autowired
-    NoteDao noteDao;
-    
-    @Autowired
-    UserDao userDao;
-    
-    @Autowired
-    CurrentUserDao currentUserDao;
 
-    @FXML
-    void back(ActionEvent event) {
-    	
-		//弹出警告，询问是否要关闭
-        Alert alertComfirm = new Alert(Alert.AlertType.CONFIRMATION);
-        alertComfirm.setTitle("警告");
-        alertComfirm.setContentText("确认要退出吗？您的备忘未创建。");
-        
-        Optional<ButtonType>result = alertComfirm.showAndWait();
+    private DialogPane dialogPane;
 
-        //确认退出
-		if(result.get()==ButtonType.OK) {
-			
-			//因为是直接切换视图，所以内容仍然在编辑框当中。
-			MemoApplication.showView(MemoView.class);
-			//调整为适当大小
-			MemoApplication.getStage().sizeToScene();
-		}
-    }
-
-    @FXML
-    void submit(ActionEvent event) {
-    	String title = txtTitle.getText();
-    	if(title.equals("")) {
-			Alert alert = new Alert(Alert.AlertType.WARNING,"标题不能为空！");
-	        alert.initOwner(MemoApplication.getStage());
-	        alert.showAndWait();
-			throw new RuntimeException("标题不能为空！");
-    	}
-    	
-    	//设置备忘的标题和内容
-    	String content = txtContent.getText();
-    	Note note = new Note();
-    	note.setTitle(title);
-    	note.setContent(content);
-    	
-		//获取创建记录的时间
-	    Calendar calendar= Calendar.getInstance();
-	    SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
-	    java.sql.Date createdDate = java.sql.Date.valueOf(dateFormat.format(calendar.getTime()));
-    	
-	    note.setCreatedDate(createdDate);
-	    
-	    //设置备忘状态
-	    note.setStatus("未完成");
-	    
-	    //获取当前用户，设置此条备忘的主人
-    	List<CurrentUser> currentUser = currentUserDao.findAll();
-    	User user = currentUser.get(0).getUser();
-    	note.setUser(user);
-    	
-    	//把备忘保存到数据库中
-    	noteDao.save(note);
-		Alert alert = new Alert(Alert.AlertType.INFORMATION,"备忘已保存。");
-        alert.initOwner(MemoApplication.getStage());
-        alert.showAndWait();
-        
-		//因为是直接切换视图，所以内容仍然在编辑框当中。
-		MemoApplication.showView(MemoView.class);
-		//调整为适当大小
-		MemoApplication.getStage().sizeToScene();
-        
-    }
+	public void setProperty(DialogPane addPane) {
+		this.dialogPane = addPane;
+		Button okButton = (Button)dialogPane.lookupButton(ButtonType.OK);
+		okButton.setText("提交");	
+		
+		//设置事件
+		okButton.addEventFilter(ActionEvent.ACTION, event->{
+	    	String title = txtTitle.getText();
+	    	if(title.equals("")) {
+				Alert alert = new Alert(Alert.AlertType.WARNING,"标题不能为空！");
+		        alert.initOwner(MemoApplication.getStage());
+		        alert.showAndWait();
+				throw new RuntimeException("标题不能为空！");
+	    	}
+	    	
+	    	//设置备忘的标题和内容
+	    	String content = txtContent.getText();
+	    	
+	    	try {
+		    	FileWriter fw = new FileWriter("temp.txt");
+		    	fw.write(title+"█"+content);
+				fw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    	
+		});
+	}
 
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -118,9 +120,62 @@ public class MemoController implements Initializable{
     User curUser = new User();
      
     @FXML
-    void AddMemo(ActionEvent event) {
-    	MemoApplication.showView(AddMemoView.class);
-    	MemoApplication.getStage().sizeToScene();
+    void AddMemo(ActionEvent event) throws IOException {
+    	
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("adddialog.fxml"));
+		DialogPane addPane = loader.load();
+		AddMemoController addMemoController = loader.getController();
+		
+		Dialog<ButtonType>dialog = new Dialog<>();
+		dialog.setDialogPane(addPane);
+		dialog.setTitle("添加备忘");
+		dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+		dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+		addMemoController.setProperty(addPane);
+    	
+		//设置一个不可见的关闭Dialog按钮，使得单击Dialog右上角的"X"能够关闭Dialog窗口
+        Node closeButton = dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
+        closeButton.managedProperty().bind(closeButton.visibleProperty());
+        closeButton.setVisible(false);
+		
+		Optional<ButtonType>clickedButton = dialog.showAndWait();
+		
+		if(clickedButton.get().equals(ButtonType.OK)) {
+			//把临时文件中的修改内容读取进来，并且进行分词。
+			String modifyString = new String(Files.readAllBytes(Paths.get("temp.txt")));
+			String modifyItems[] = modifyString.split("█");
+			//删除临时文件
+			Files.delete(Paths.get("temp.txt"));
+			
+			Note note = new Note();
+			//更新当前备忘的信息
+			note.setTitle(modifyItems[0]);
+			note.setContent(modifyItems[1]);
+			note.setStatus("未完成");
+			
+			//获取创建记录的时间
+		    Calendar calendar= Calendar.getInstance();
+		    SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+		    java.sql.Date createdDate = java.sql.Date.valueOf(dateFormat.format(calendar.getTime()));
+		    //设置创建时间
+		    note.setCreatedDate(createdDate);
+		    //设置创建者为当前用户
+			note.setUser(curUser);
+			noteDao.save(note);
+			
+			//弹出备忘已创建的提示
+			Alert alert = new Alert(Alert.AlertType.INFORMATION,"备忘已保存。");
+	        alert.initOwner(MemoApplication.getStage());
+	        alert.showAndWait();
+			
+			dialog.close();
+			
+			//添加备忘后刷新列表
+			noteView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+			loadNoteDetails();
+			setColumnProperties();
+		}
     }
 
     @FXML

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane prefHeight="430.0" prefWidth="604.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.huihui.memo.controller.AddMemoController">
+   <content>
+      <Pane prefHeight="442.0" prefWidth="604.0">
+         <children>
+            <Label layoutX="254.0" layoutY="25.0" text="新建备忘">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtTitle" layoutX="183.0" layoutY="77.0" prefHeight="23.0" prefWidth="255.0" promptText="请输入标题">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label layoutX="110.0" layoutY="75.0" text="标题">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="txtContent" layoutX="183.0" layoutY="121.0" prefHeight="259.0" prefWidth="255.0" promptText="请输入内容" />
+            <Label layoutX="110.0" layoutY="121.0" text="内容">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </content>
+</DialogPane>
