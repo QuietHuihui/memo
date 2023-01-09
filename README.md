@@ -1,8 +1,10 @@
 
 # 备忘录软件
 
-Springboot+JpaRepository+JavaFX
-![Image text](https://raw.githubusercontent.com/QuietHuihui/memo/main/img-folder/memo.png?token=GHSAT0AAAAAAB4IYN5FRFTVYRCHJFPUPEG6Y53V4FA)
+## Springboot+JpaRepository+JavaFX
+
+</br></br>
+![alt text](https://github.com/QuietHuihui/memo/blob/main/img-folder/memo.png?raw=true)
 
 
 ## 源码使用方法
