@@ -4,7 +4,7 @@
 ## Springboot+JpaRepository+JavaFX
 
 </br></br>
-![Image text](https://raw.githubusercontent.com/QuietHuihui/memo/main/img-folder/memo.png?token=GHSAT0AAAAAAB4IYN5EATJC6XPZGKXHVFBGY53WNJQ)
+![alt text](https://github.com/QuietHuihui/memo/blob/main/img-folder/memo.png?raw=true)
 
 
 ## 源码使用方法
