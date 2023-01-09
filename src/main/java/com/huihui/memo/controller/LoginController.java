@@ -39,7 +39,9 @@ public class LoginController{
 	@Autowired
 	CurrentUserDao currentUserDao;
 	
-	public LoginController() throws IOException {
+	public LoginController(){
+		MemoApplication.getStage().setTitle("备忘录");
+		MemoApplication.getStage().setResizable(false);
 	}
 	
 	public void show() {
