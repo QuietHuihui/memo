@@ -269,7 +269,8 @@ public class MemoController implements Initializable{
     //获得已完成备忘
     @FXML
     void getFinishedMemo(ActionEvent event) {
-    	List<Note>finishedNotes = noteDao.findFinished();
+    	Integer uid = curUser.getId();
+    	List<Note>finishedNotes = noteDao.findFinished(uid);
     	noteList.clear();
     	noteList.addAll(finishedNotes);
     	noteView.setItems(noteList);
@@ -279,7 +280,8 @@ public class MemoController implements Initializable{
     //获得未完成备忘
     @FXML
     void getUnfinishedMemo(ActionEvent event) {
-    	List<Note>unfinishedNotes = noteDao.findUnFinished();
+    	Integer uid = curUser.getId();
+    	List<Note>unfinishedNotes = noteDao.findUnFinished(uid);
     	noteList.clear();
     	noteList.addAll(unfinishedNotes);
     	noteView.setItems(noteList);
