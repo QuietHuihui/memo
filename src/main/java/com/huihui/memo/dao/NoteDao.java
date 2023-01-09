@@ -18,10 +18,11 @@ public interface NoteDao extends JpaRepository<Note, Integer>{
 
 	List<Note> findByUserId(@Param("uid") Integer uid);
 
-	//根据书名、作者或者ISBN或者出版社查询图书
+	//根据标题和内容查找备忘
 	@Query(value="select * from Note where title like '%'||?1||'%' or content like '%'||?1||'%' and user_fk = ?2 ",nativeQuery = true)
 	List<Note> findBySearch(String search, Integer uid);
 
+	//根据标题和内容查找备忘，并替换其中的内容
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE Note n SET n.content = replace(n.content, :search , :replaceString), n.title = replace(n.title, :search , :replaceString) WHERE n.content LIKE CONCAT('%',:search,'%') or n.title LIKE CONCAT('%',:search,'%') and n.user.id=:uid")

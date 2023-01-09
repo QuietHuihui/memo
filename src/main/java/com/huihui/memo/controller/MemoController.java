@@ -148,6 +148,15 @@ public class MemoController implements Initializable{
     @FXML
     void Replace(ActionEvent event) {
     	String search = txtSearch.getText();
+    	
+    	if(search.equals("")) {
+            Alert alertError = new Alert(Alert.AlertType.ERROR);
+            alertError.setTitle("错误");
+            alertError.setContentText("不能够替换空内容。");
+            alertError.showAndWait();
+    		throw new RuntimeException("不能够替换空内容！");
+    	}
+    	
     	String replace = txtReplace.getText();
     	Integer uid = curUser.getId();
     	List<Note>searchNotes = noteDao.findBySearch(search,uid);
