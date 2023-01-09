@@ -77,10 +77,6 @@
                         <Font name="System Bold Italic" size="23.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnRefresh" layoutX="511.0" layoutY="40.0" mnemonicParsing="false" onAction="#Refresh" prefHeight="30.0" prefWidth="65.0" style="-fx-background-color: RGB(172,152,255);" text="刷新">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font></Button>
                </children>
             </AnchorPane>
         </items>

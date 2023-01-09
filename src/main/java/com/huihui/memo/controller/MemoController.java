@@ -18,7 +18,6 @@ import com.huihui.memo.dao.NoteDao;
 import com.huihui.memo.pojo.CurrentUser;
 import com.huihui.memo.pojo.Note;
 import com.huihui.memo.pojo.User;
-import com.huihui.memo.view.AddMemoView;
 import com.huihui.memo.view.LoginView;
 
 import de.felixroske.jfxsupport.FXMLController;
@@ -46,8 +45,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -55,70 +52,84 @@ import javafx.util.Callback;
 public class MemoController implements Initializable{
 
 	//javafx控件
+	
+	//添加备忘按钮
     @FXML
     private Button btnAddMemo;
-
+    
+    //所有备忘按钮
     @FXML
     private Button btnAllMemo;
 
+    //已完成备忘按钮
     @FXML
     private Button btnFinishedMemo;
 
+    //退出按钮
     @FXML
     private Button btnLogout;
 
+    //查询按钮
     @FXML
     private Button btnSearch;
     
+    //替换按钮
     @FXML
     private Button btnReplace;
-    
-    @FXML
-    private Button btnRefresh;
 
+    //未完成备忘按钮
     @FXML
     private Button btnUnfinishedMemo;
 
+    //备忘表格视图
     @FXML
     private TableView<Note>noteView;
 
+    //详情栏
     @FXML
     private TableColumn<Note, Boolean> detailCol;
     
+    //删除栏
     @FXML
     private TableColumn<Note, Boolean> deleteCol;
 
+    //标题栏
     @FXML
     private TableColumn<Note, String> titleCol;
     
+    //状态 栏
     @FXML
     private TableColumn<Note, String> statusCol;
 
+    //查询输入框
     @FXML
     private TextField txtSearch;
     
+    //替换输入框
     @FXML
     private TextField txtReplace;
     
+    //欢迎词标签
     @FXML
     private Label labelWelcome;
 
     //用于存储视图中的每个项
     private ObservableList<Note>noteList = FXCollections.observableArrayList();
     
-    Parent root;
+    //数据库访问对象
     
-    Stage primaryStage;
-    
-    //其他
+    //备忘表
     @Autowired
     NoteDao noteDao;
     
+    //当前用户表
     @Autowired
     CurrentUserDao currentUserDao;
     
+    //当前用户
     User curUser = new User();
      
+    //添加备忘
     @FXML
     void AddMemo(ActionEvent event) throws IOException {
     	
@@ -178,6 +189,7 @@ public class MemoController implements Initializable{
 		}
     }
 
+    //退出
     @FXML
     void Logout(ActionEvent event) {
 		//删除之前的用户
@@ -189,6 +201,7 @@ public class MemoController implements Initializable{
         Platform.exit();
     }
 
+    //搜索
     @FXML
     void Search(ActionEvent event) {
     	String search = txtSearch.getText();
@@ -200,6 +213,7 @@ public class MemoController implements Initializable{
     	setColumnProperties();
     }
 
+    //替换
     @FXML
     void Replace(ActionEvent event) {
     	String search = txtSearch.getText();
@@ -239,6 +253,7 @@ public class MemoController implements Initializable{
 		}
     }
     
+    //获得所有备忘
     @FXML
     void getAllMemo(ActionEvent event) {
         //获取所有备忘
@@ -247,6 +262,7 @@ public class MemoController implements Initializable{
 		setColumnProperties();
     }
 
+    //获得已完成备忘
     @FXML
     void getFinishedMemo(ActionEvent event) {
     	List<Note>finishedNotes = noteDao.findFinished();
@@ -256,6 +272,7 @@ public class MemoController implements Initializable{
     	setColumnProperties();
     }
 
+    //获得未完成备忘
     @FXML
     void getUnfinishedMemo(ActionEvent event) {
     	List<Note>unfinishedNotes = noteDao.findUnFinished();
@@ -265,6 +282,8 @@ public class MemoController implements Initializable{
     	setColumnProperties();
     }
 
+    //设置当前用户
+    //从备忘表中把所有备忘取出来，设置为表格视图的Item
     private void loadNoteDetails() {
     	noteList.clear();
 
@@ -278,6 +297,7 @@ public class MemoController implements Initializable{
     	noteView.setItems(noteList);
     }
 
+    //设置表格视图中，每一栏的内容
     private void setColumnProperties() {
     	
     	//编辑或者查看备忘详情
@@ -378,6 +398,7 @@ public class MemoController implements Initializable{
     		}
     	};
     	
+    	//删除备忘
     	Callback<TableColumn<Note, Boolean>, TableCell<Note, Boolean>> deleteCell = 
     			new Callback<TableColumn<Note, Boolean>, TableCell<Note, Boolean>>()
     	{
@@ -449,25 +470,6 @@ public class MemoController implements Initializable{
     	statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
     	detailCol.setCellFactory(detailCell);
     	deleteCol.setCellFactory(deleteCell);
-    }
-    
-    @FXML
-    void Refresh(ActionEvent event) {
-		noteView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		loadNoteDetails();
-		setColumnProperties();
-    }
-    
-    //编辑备忘使用
-    
-    @FXML
-    void editBack(ActionEvent event) {
-
-    }
-
-    @FXML
-    void editSubmit(ActionEvent event) {
-
     }
     
 	@Override

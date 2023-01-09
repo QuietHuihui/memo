@@ -2,22 +2,7 @@ package com.huihui.memo.controller;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.huihui.memo.MemoApplication;
-import com.huihui.memo.dao.CurrentUserDao;
-import com.huihui.memo.dao.NoteDao;
-import com.huihui.memo.dao.UserDao;
-import com.huihui.memo.pojo.CurrentUser;
-import com.huihui.memo.pojo.Note;
-import com.huihui.memo.pojo.User;
-import com.huihui.memo.view.MemoView;
-
 import de.felixroske.jfxsupport.FXMLController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
