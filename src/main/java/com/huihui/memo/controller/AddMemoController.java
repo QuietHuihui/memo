@@ -107,6 +107,11 @@ public class AddMemoController {
         alert.initOwner(MemoApplication.getStage());
         alert.showAndWait();
         
+		//因为是直接切换视图，所以内容仍然在编辑框当中。
+		MemoApplication.showView(MemoView.class);
+		//调整为适当大小
+		MemoApplication.getStage().sizeToScene();
+        
     }
 
 }
