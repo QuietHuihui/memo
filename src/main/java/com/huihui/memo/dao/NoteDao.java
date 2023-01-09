@@ -24,7 +24,7 @@ public interface NoteDao extends JpaRepository<Note, Integer>{
 
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE Note n SET n.content = replace(n.content, :search , :replaceString) WHERE n.content LIKE CONCAT('%',:search,'%') and n.user.id=:uid")
+	@Query(value = "UPDATE Note n SET n.content = replace(n.content, :search , :replaceString), n.title = replace(n.title, :search , :replaceString) WHERE n.content LIKE CONCAT('%',:search,'%') or n.title LIKE CONCAT('%',:search,'%') and n.user.id=:uid")
 	void replace(@Param("search") String search,@Param("replaceString") String replaceString,@Param("uid") Integer uid);
 
 }
