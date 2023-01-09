@@ -366,6 +366,15 @@ public class MemoController implements Initializable{
 										note.setContent(modifyItems[1]);
 										note.setStatus(modifyItems[2]);
 										
+										//如果状态修改为已完成，则添加完成时间
+										if(note.getStatus().equals("已完成")) {
+											//获取完成备忘的时间
+										    Calendar calendar= Calendar.getInstance();
+										    SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+										    java.sql.Date finishedDate = java.sql.Date.valueOf(dateFormat.format(calendar.getTime()));
+											note.setFinishedDate(finishedDate);
+										}
+										
 										noteDao.save(note);
 										
 										dialog.close();

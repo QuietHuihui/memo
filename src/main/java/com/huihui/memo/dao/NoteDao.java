@@ -19,13 +19,13 @@ public interface NoteDao extends JpaRepository<Note, Integer>{
 	List<Note> findByUserId(@Param("uid") Integer uid);
 
 	//根据标题和内容查找备忘
-	@Query(value="select * from Note where user_fk=?2 and title like '%'||?1||'%' or content like '%'||?1||'%'",nativeQuery = true)
+	@Query(value="select * from Note where user_fk=?2 and title like '%'||?1||'%' or user_fk=?2 and content like '%'||?1||'%'",nativeQuery = true)
 	List<Note> findBySearch(String search, Integer uid);
 
 	//根据标题和内容查找备忘，并替换其中的内容
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE Note n SET n.content = replace(n.content, :search , :replaceString), n.title = replace(n.title, :search , :replaceString) WHERE n.user.id=:uid and n.content LIKE CONCAT('%',:search,'%') or n.title LIKE CONCAT('%',:search,'%')")
+	@Query(value = "UPDATE Note n SET n.content = replace(n.content, :search , :replaceString), n.title = replace(n.title, :search , :replaceString) WHERE n.user.id=:uid and n.content LIKE CONCAT('%',:search,'%') or n.user.id=:uid and n.title LIKE CONCAT('%',:search,'%')")
 	void replace(@Param("search") String search,@Param("replaceString") String replaceString,@Param("uid") Integer uid);
 
 	@Query(value = "select * from Note where status = '已完成' and user_fk=?1 ",nativeQuery = true)

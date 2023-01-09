@@ -52,6 +52,8 @@ public class Note {
 	@JoinColumn(name = "user_fk",nullable=false)
 	User user;
 
+
+
 	public Note(Integer id, String title, String content, String status, Date createdDate, User user) {
 		super();
 		this.id = id;
@@ -105,7 +107,13 @@ public class Note {
 		this.user = user;
 	}
 
-	
+	public Date getFinishedDate() {
+		return finishedDate;
+	}
+
+	public void setFinishedDate(Date finishedDate) {
+		this.finishedDate = finishedDate;
+	}
 	public String getStatus() {
 		return status;
 	}
