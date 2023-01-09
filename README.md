@@ -1,7 +1,7 @@
 
 # 备忘录软件
 
-Springboot+JpaRepository+JavaFX
+#Springboot+JpaRepository+JavaFX</br></br>
 ![Image text](https://raw.githubusercontent.com/QuietHuihui/memo/main/img-folder/memo.png?token=GHSAT0AAAAAAB4IYN5FRFTVYRCHJFPUPEG6Y53V4FA)
 
 
