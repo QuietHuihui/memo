@@ -160,9 +160,13 @@ public class MemoController implements Initializable{
 			Files.delete(Paths.get("temp.txt"));
 			
 			Note note = new Note();
-			//更新当前备忘的信息
-			note.setTitle(modifyItems[0]);
-			note.setContent(modifyItems[1]);
+			//设置当前备忘的信息
+			if(modifyItems.length==2) {
+				note.setTitle(modifyItems[0]);
+				note.setContent(modifyItems[1]);
+			}else {
+				note.setTitle(modifyItems[0]);
+			}
 			note.setStatus("未完成");
 			
 			//获取创建记录的时间
